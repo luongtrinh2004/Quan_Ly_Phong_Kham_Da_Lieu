@@ -7,7 +7,7 @@
     <div class="carousel-inner">
         <!-- Slide 1 -->
         <div class="carousel-item active">
-            <div class="hero" style="background: url('/img/bg1.webp') no-repeat center center/cover; height: 500px;">
+            <div class="hero" style="background: url('/img/bg1.png') no-repeat center center/cover; height: 500px;">
                 <div class="container text-center text-white">
 
                 </div>

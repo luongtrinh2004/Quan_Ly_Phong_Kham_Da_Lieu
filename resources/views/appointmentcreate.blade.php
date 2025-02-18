@@ -17,10 +17,10 @@
 
         <!-- Select Specialty -->
         <div class="row mb-3">
-            <label for="specialty" class="col-sm-2 col-form-label">Chuyên Khoa</label>
+            <label for="specialty" class="col-sm-2 col-form-label">Dịch Vụ</label>
             <div class="col-sm-10">
                 <select name="specialty" id="specialty" class="form-control" required>
-                    <option value="">-- Chọn chuyên khoa --</option>
+                    <option value="">-- Chọn Dịch Vụ --</option>
                     @foreach($specialties as $specialty)
                     <option value="{{ $specialty }}">{{ $specialty }}</option>
                     @endforeach
@@ -33,7 +33,7 @@
             <label for="doctor_id" class="col-sm-2 col-form-label">Chọn Bác Sĩ</label>
             <div class="col-sm-10">
                 <select name="doctor_id" id="doctor_id" class="form-control" required>
-                    <option value="">-- Chọn chuyên khoa trước --</option>
+                    <option value="">-- Chọn mục Dịch Vụ trước --</option>
                 </select>
             </div>
         </div>

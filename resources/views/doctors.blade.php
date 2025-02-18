@@ -30,7 +30,7 @@
                     <div class="text-start mx-auto px-3 py-2 rounded info-box" style="max-width: 450px;">
                         <p class="mb-2"><strong>Email:</strong> {{ $doctor->email }}</p>
                         <p class="mb-2"><strong>Số điện thoại:</strong> {{ $doctor->phone }}</p>
-                        <p class="mb-0"><strong>Giới thiệu:</strong> {{ $doctor->bio ?: 'Chưa cập nhật' }}</p>
+                        <p class="mb-0"><strong>Mô tả:</strong> {{ $doctor->bio ?: 'Chưa cập nhật' }}</p>
                     </div>
 
                     <a href="#" class="btn btn-primary btn-sm mt-3">Xem chi tiết</a>
