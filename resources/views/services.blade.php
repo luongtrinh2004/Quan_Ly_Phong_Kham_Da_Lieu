@@ -83,45 +83,77 @@
                             đảm bảo trải nghiệm điều trị tốt nhất cho người bệnh.
                         </div>
 
-                        <div class="grid-3" style="margin:20px 25px;margin-left: 85px;">
+
+
+                        <style>
+                        /* Grid hiển thị dịch vụ */
+                        .grid-3 {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                            gap: 20px;
+                            justify-content: center;
+                            max-width: 1000px;
+                            margin: 20px auto;
+                        }
+
+                        /* Ô chứa mỗi dịch vụ */
+                        .grid-item {
+                            background: white;
+                            border-radius: 12px;
+                            overflow: hidden;
+                            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+                            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+                            text-align: center;
+                            padding-bottom: 15px;
+                        }
+
+                        .grid-item:hover {
+                            transform: translateY(-5px);
+                            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+                        }
+
+                        /* Hình ảnh dịch vụ */
+                        .grid-item img {
+                            width: 100%;
+                            height: 220px;
+                            /* Chiều cao cố định */
+                            object-fit: cover;
+                            /* Cắt ảnh vừa với khung */
+                            border-bottom: 3px solid #00AEEF;
+                        }
+
+                        /* Tên dịch vụ */
+                        .grid-item h3 {
+                            font-size: 16px;
+                            font-weight: bold;
+                            color: #03428E;
+                            padding: 15px;
+                            margin: 0;
+                            background: #EAF6FF;
+                            border-radius: 0 0 12px 12px;
+                        }
+                        </style>
+
+                        <!-- Hiển thị dịch vụ -->
+                        <div class="grid-3">
+                            @if(isset($services) && $services->count() > 0)
+                            @foreach($services as $service)
                             <div class="grid-item">
-                                <img src="/img/img31.webp" alt="Tầm nhìn">
-                                <h3 class="hover-blue" style="cursor:pointer;height:65px">
-                                    Quản Lý Song Thai - Đa Thai</h3>
+                                <img src="{{ asset($service->image) }}" alt="{{ $service->name }}"
+                                    onerror="this.onerror=null; this.src='{{ asset('img/default.jpg') }}';">
+                                <h3>{{ $service->name }}</h3>
                             </div>
-                            <div class="grid-item">
-                                <img src="/img/img23.webp" alt="Sứ mệnh">
-                                <h3 class="hover-blue" style="cursor:pointer;">Khám Sàng Lọc Bệnh Lý Tim Bẩm Sinh</h3>
-                            </div>
-                            <div class="grid-item">
-                                <img src="/img/img24.webp" alt="Giá trị cốt lõi">
-                                <h3 class="hover-blue" style="cursor:pointer;height:60px">Chăm Sóc Thai Sản Trọn Gói</h3>
-                            </div>
-                            <div class="grid-item">
-                                <img src="/img/img25.webp" alt="Giá trị cốt lõi">
-                                <h3 class="hover-blue" style="cursor:pointer;">Gói Phục Hồi Chức Năng</h3>
-                            </div>
-                            <div class="grid-item">
-                                <img src="/img/img26.webp" alt="Giá trị cốt lõi" style="height: 166px;">
-                                <h3 class="hover-blue" style="cursor:pointer;">Nội Soi Tiêu Hóa</h3>
-                            </div>
-                            <div class="grid-item">
-                                <img src="/img/img27.webp" alt="Giá trị cốt lõi">
-                                <h3 class="hover-blue" style="cursor:pointer;">Gói Xét Nghiệm Theo Yêu Cầu</h3>
-                            </div>
-                            <div class="grid-item">
-                                <img src="/img/img28.webp" alt="Giá trị cốt lõi" style="height:179.29px;">
-                                <h3 class="hover-blue" style="cursor:pointer;">Gói Sàng Lọc Trước Sinh</h3>
-                            </div>
-                            <div class="grid-item">
-                                <img src="/img/img29.webp" alt="Giá trị cốt lõi" style="height:179.29px;">
-                                <h3 class="hover-blue" style="cursor:pointer;">Gói Khám Nhi</h3>
-                            </div>
-                            <div class="grid-item">
-                                <img src="/img/img30.webp" alt="Giá trị cốt lõi" style="height:179.29px;">
-                                <h3 class="hover-blue" style="cursor:pointer;">Tầm Soát Ung Thư Toàn Diện</h3>
-                            </div>
+                            @endforeach
+                            @else
+                            <p class="text-center">Hiện chưa có dịch vụ nào.</p>
+                            @endif
                         </div>
+
+
+
+
+
+
 
                         <div class="flex w-full justify-center">
                             <button class="load-more">Xem thêm &gt;&gt;</button>

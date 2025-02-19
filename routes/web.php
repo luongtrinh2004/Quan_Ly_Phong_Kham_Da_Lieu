@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 // Trang chủ
@@ -51,6 +52,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Routes for managing supports
     Route::get('/admin/supports', [SupportController::class, 'index'])->name('admin.supports.index');
     Route::delete('/admin/supports/{id}', [SupportController::class, 'destroy'])->name('admin.supports.destroy');
+
+    // Quản lý dịch vụ
+    Route::get('/admin/manageservices', [ServiceController::class, 'manageServices'])->name('admin.manageservices');
+    Route::post('/services/store', [ServiceController::class, 'store'])->name('services.store');
+    Route::get('/services/{id}/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    Route::post('/services/{id}/update', [ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+    // Đảm bảo route này chỉ hiển thị danh sách dịch vụ cho người dùng
+    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 });
 
 // Routes cho AdminDoctor (Xem lịch nhưng không chỉnh sửa)
@@ -70,10 +81,8 @@ Route::get('/about', function () {
 })->name('about');
 Route::get('/get-doctors/{specialty}', [DoctorController::class, 'getDoctorsBySpecialty']);
 
-
-Route::get('/services', function () {
-    return view('services');
-})->name('services');
+// Route hiển thị dịch vụ cho bệnh nhân
+Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 
 Route::get('/contact', function () {
     return view('contact'); // Trang Contact
@@ -84,14 +93,12 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 // Routes đặt lịch khám
 Route::middleware(['auth'])->group(function () {
-    // Bệnh nhân đặt lịch khám
     Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
     Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointments.store');
 
     Route::middleware(['auth', 'role:admindoctor'])->group(function () {
         Route::get('/admindoctor/dashboard', [DoctorController::class, 'showDashboard'])->name('admindoctor.dashboard');
     });
-    
 
     // Doctor xem lịch khám ngay khi bệnh nhân đặt (không cần Admin duyệt)
     Route::middleware(['role:admindoctor'])->group(function () {
