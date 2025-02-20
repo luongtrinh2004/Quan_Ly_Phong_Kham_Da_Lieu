@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Quản lý Lịch Hẹn')
+@section('title', 'Quản lý lịch hẹn')
 
 @section('content')
     <div class="container py-4">
         <h1 class="text-center mb-4" style="font-family: 'Poppins', sans-serif;">Quản lý Lịch Hẹn</h1>
 
-        <!-- Tìm kiếm lịch hẹn -->
+        <!-- Form tìm kiếm lịch hẹn -->
         <form method="GET" action="{{ route('admin.appointments.index') }}" class="mb-4">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Tìm kiếm lịch hẹn..."
@@ -20,8 +20,7 @@
             <h3 class="mb-3">Chỉnh Sửa Lịch Hẹn</h3>
             <form method="POST" action="{{ route('admin.appointments.update', $editAppointment->id) }}" class="mb-4">
                 @csrf
-                @method('POST')
-                <!-- Dùng POST thay vì PUT -->
+                @method('PUT')
                 <div class="row">
                     <div class="col-md-3 mb-2">
                         <input type="text" name="name" class="form-control" value="{{ $editAppointment->name }}" required>
@@ -94,7 +93,7 @@
                     <th>Điện Thoại</th>
                     <th>Tuổi</th>
                     <th>CCCD</th>
-                    <th>Mô Tả</th>
+                    <th>Ngày Hẹn</th>
                     <th>Trạng Thái</th>
                     <th>Hành Động</th>
                 </tr>
@@ -109,7 +108,7 @@
                         <td>{{ $appointment->phone }}</td>
                         <td>{{ $appointment->age }}</td>
                         <td>{{ $appointment->cccd }}</td>
-                        <td>{{ $appointment->description }}</td>
+                        <td>{{ $appointment->appointment_date }}</td>
                         <td>
                             @if($appointment->status === 'pending')
                                 <span class="badge bg-warning">Chờ duyệt</span>
@@ -121,18 +120,19 @@
                         </td>
                         <td class="d-flex gap-2">
                             <a href="{{ route('admin.appointments.index', ['edit_id' => $appointment->id]) }}"
-                                class="btn btn-warning btn-sm">Sửa</a>
+                                class="btn btn-info btn-sm">Sửa</a>
                             <form method="POST" action="{{ route('admin.appointments.approve', $appointment->id) }}">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" class="btn btn-success btn-sm">Duyệt</button>
+                                <button type="submit" class="btn btn-primary btn-sm">Duyệt</button>
                             </form>
                             <form method="POST" action="{{ route('admin.appointments.reject', $appointment->id) }}">
                                 @csrf
                                 @method('PUT')
                                 <button type="submit" class="btn btn-warning btn-sm">Từ chối</button>
                             </form>
-                            <form method="POST" action="{{ route('admin.appointments.destroy', $appointment->id) }}">
+                            <form method="POST" action="{{ route('admin.appointments.destroy', $appointment->id) }}"
+                                class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm"
@@ -140,10 +140,42 @@
                                     Xóa
                                 </button>
                             </form>
+
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+
+    <style>
+        .card-header {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-sm {
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .d-flex.gap-2 {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+
 @endsection

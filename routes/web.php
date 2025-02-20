@@ -98,22 +98,13 @@ Route::get('/contact', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home.index');
 
 // Routes đặt lịch khám
-Route::middleware(['auth'])->group(function () {
-    Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointments.store');
-
-    Route::middleware(['auth', 'role:admindoctor'])->group(function () {
-        Route::get('/admindoctor/dashboard', [DoctorController::class, 'showDashboard'])->name('admindoctor.dashboard');
-    });
-
-    Route::middleware(['role:admindoctor'])->group(function () {
-        Route::get('/doctor/schedule', [DoctorController::class, 'showSchedule'])->name('doctor.schedule');
-    });
-
-    Route::middleware(['role:admin'])->group(function () {
-        Route::get('/admin/appointments', [AdminController::class, 'showAppointments'])->name('admin.appointments.index');
-        Route::get('/admin/patients', [AdminController::class, 'showAllPatients'])->name('admin.patients.index');
-    });
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/appointments', [AdminController::class, 'showAppointments'])->name('admin.appointments.index');
+    Route::post('/admin/appointments/store', [AdminController::class, 'storeAppointment'])->name('admin.appointments.store');
+    Route::put('/admin/appointments/{id}/update', [AdminController::class, 'updateAppointment'])->name('admin.appointments.update'); // 🛠 Đảm bảo là PUT
+    Route::delete('/admin/appointments/{id}', [AdminController::class, 'deleteAppointment'])->name('admin.appointments.destroy');
+    Route::put('/admin/appointments/{id}/approve', [AdminController::class, 'approveAppointment'])->name('admin.appointments.approve');
+    Route::put('/admin/appointments/{id}/reject', [AdminController::class, 'rejectAppointment'])->name('admin.appointments.reject');
 });
 
 // Routes hỗ trợ khách hàng
