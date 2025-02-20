@@ -108,6 +108,30 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Quản Lý Dịch Vụ</h5>
+                        <a href="{{ url('/admin/manageservices') }}" class="btn btn-primary">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Quản Lý Hồ Sơ Bệnh Nhân</h5>
+                        <a href="{{ url('/admin/#') }}" class="btn btn-primary">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Hóa Đơn và Thanh Toán</h5>
+                        <a href="{{ url('/admin/#') }}" class="btn btn-primary">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <footer class="footer">
@@ -278,7 +302,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
