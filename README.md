@@ -26,7 +26,7 @@
 
 | Công nghệ  | Phiên bản |
 | ---------- | --------- |
-| Laravel    | 10.x      |
+| Laravel    | 7.x       |
 | Bootstrap  | 5.x       |
 | MySQL      | 8.x       |
 | JavaScript | ES6+      |
@@ -56,7 +56,7 @@ php artisan key:generate
 
 ```sh
 composer install
-npm install && npm run dev
+
 ```
 
 ### 📌 4. Chạy database migration và seed dữ liệu mẫu
@@ -70,8 +70,6 @@ php artisan migrate --seed
 ```sh
 php artisan serve
 ```
-
-Mở trình duyệt và truy cập: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ---
 
@@ -91,7 +89,7 @@ Mở trình duyệt và truy cập: [http://127.0.0.1:8000](http://127.0.0.1:800
 
 ### 🔹 Quản lý bác sĩ
 
-![Doctor Management](public/img/quanlybacsireadme.png)
+![Doctor Management](public/img/quanlybacsireadme.png.png)
 
 ### 🔹 Hóa đơn & Thanh toán
 
