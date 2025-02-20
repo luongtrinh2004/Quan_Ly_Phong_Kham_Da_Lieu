@@ -1,45 +1,108 @@
 @extends('layouts.app')
 
-@section('title', 'Quản lý lịch hẹn')
+@section('title', 'Quản lý Lịch Hẹn')
 
 @section('content')
-<div class="container py-4">
-    <h1 class="text-center mb-4" style="font-family: 'Poppins', sans-serif;">Quản lý Lịch Hẹn</h1>
+    <div class="container py-4">
+        <h1 class="text-center mb-4" style="font-family: 'Poppins', sans-serif;">Quản lý Lịch Hẹn</h1>
 
-    @if($appointments->isEmpty())
-    <div class="alert alert-info text-center">Hiện tại không có lịch hẹn nào.</div>
-    @else
-    @php
-    $groupedAppointments = $appointments->groupBy(function($appointment) {
-    return \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y');
-    });
-    @endphp
+        <!-- Tìm kiếm lịch hẹn -->
+        <form method="GET" action="{{ route('admin.appointments.index') }}" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm lịch hẹn..."
+                    value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </div>
+        </form>
 
-    @foreach($groupedAppointments as $date => $dailyAppointments)
-    <div class="card mb-4 shadow-lg border-0">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">{{ $date }}</h4>
-        </div>
-        <div class="card-body">
-            <table class="table table-hover">
-                <thead>
+        <!-- Form thêm hoặc sửa lịch hẹn -->
+        @if(isset($editAppointment))
+            <h3 class="mb-3">Chỉnh Sửa Lịch Hẹn</h3>
+            <form method="POST" action="{{ route('admin.appointments.update', $editAppointment->id) }}" class="mb-4">
+                @csrf
+                @method('POST')
+                <!-- Dùng POST thay vì PUT -->
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <input type="text" name="name" class="form-control" value="{{ $editAppointment->name }}" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="email" name="email" class="form-control" value="{{ $editAppointment->email }}" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="text" name="phone" class="form-control" value="{{ $editAppointment->phone }}" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="number" name="age" class="form-control" value="{{ $editAppointment->age }}" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="text" name="cccd" class="form-control" value="{{ $editAppointment->cccd }}" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="date" name="appointment_date" class="form-control"
+                            value="{{ $editAppointment->appointment_date }}" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="text" name="description" class="form-control" value="{{ $editAppointment->description }}">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <button type="submit" class="btn btn-warning w-100">Lưu Thay Đổi</button>
+                    </div>
+                </div>
+            </form>
+        @else
+            <h3 class="mb-3">Thêm Lịch Hẹn</h3>
+            <form method="POST" action="{{ route('admin.appointments.store') }}" class="mb-4">
+                @csrf
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <input type="text" name="name" class="form-control" placeholder="Tên bệnh nhân" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="text" name="phone" class="form-control" placeholder="Số điện thoại" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="number" name="age" class="form-control" placeholder="Tuổi" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="text" name="cccd" class="form-control" placeholder="Căn Cước Công Dân" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="date" name="appointment_date" class="form-control" required>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="text" name="description" class="form-control" placeholder="Ghi chú">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <button type="submit" class="btn btn-success w-100">Thêm Lịch Hẹn</button>
+                    </div>
+                </div>
+            </form>
+        @endif
+
+        <!-- Danh sách lịch hẹn -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Bác Sĩ</th>
+                    <th>Bệnh Nhân</th>
+                    <th>Email</th>
+                    <th>Điện Thoại</th>
+                    <th>Tuổi</th>
+                    <th>CCCD</th>
+                    <th>Mô Tả</th>
+                    <th>Trạng Thái</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($appointments as $appointment)
                     <tr>
-                        <th>#</th>
-                        <th>Bác Sĩ</th>
-                        <th>Bệnh Nhân</th>
-                        <th>Email</th>
-                        <th>Điện Thoại</th>
-                        <th>Tuổi</th>
-                        <th>CCCD</th>
-                        <th>Mô Tả</th>
-                        <th>Trạng Thái</th>
-                        <th>Hành Động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($dailyAppointments as $index => $appointment)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ optional($appointment->doctor)->name ?? 'Không xác định' }}</td>
                         <td>{{ $appointment->name }}</td>
                         <td>{{ $appointment->email }}</td>
@@ -49,14 +112,16 @@
                         <td>{{ $appointment->description }}</td>
                         <td>
                             @if($appointment->status === 'pending')
-                            <span class="badge bg-warning">Chờ duyệt</span>
+                                <span class="badge bg-warning">Chờ duyệt</span>
                             @elseif($appointment->status === 'approved')
-                            <span class="badge bg-success">Đã duyệt</span>
+                                <span class="badge bg-success">Đã duyệt</span>
                             @else
-                            <span class="badge bg-danger">Đã từ chối</span>
+                                <span class="badge bg-danger">Đã từ chối</span>
                             @endif
                         </td>
                         <td class="d-flex gap-2">
+                            <a href="{{ route('admin.appointments.index', ['edit_id' => $appointment->id]) }}"
+                                class="btn btn-warning btn-sm">Sửa</a>
                             <form method="POST" action="{{ route('admin.appointments.approve', $appointment->id) }}">
                                 @csrf
                                 @method('PUT')
@@ -67,7 +132,7 @@
                                 @method('PUT')
                                 <button type="submit" class="btn btn-warning btn-sm">Từ chối</button>
                             </form>
-                            <form method="POST" action="{{ route('admin.appointments.delete', $appointment->id) }}">
+                            <form method="POST" action="{{ route('admin.appointments.destroy', $appointment->id) }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm"
@@ -77,44 +142,8 @@
                             </form>
                         </td>
                     </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    @endforeach
-    @endif
-</div>
-
-<!-- CSS giúp bố cục gọn gàng hơn -->
-<style>
-.card-header {
-    font-size: 20px;
-    font-weight: 600;
-}
-
-.table th {
-    background-color: #f8f9fa;
-    font-weight: bold;
-    text-align: center;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-.btn-sm {
-    font-size: 14px;
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-
-.d-flex.gap-2 {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-</style>
-
 @endsection
