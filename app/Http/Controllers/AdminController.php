@@ -5,21 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Doctor;
 use App\Models\Appointment;
-use App\Models\Patient;
 use App\Models\User;
 
 class AdminController extends Controller
 {
-    // Hiển thị danh sách bác sĩ với tìm kiếm
     public function showDoctors(Request $request)
     {
         $search = $request->input('search');
         $editDoctor = null;
 
+        // Nếu có yêu cầu sửa bác sĩ
         if ($request->has('edit_id')) {
             $editDoctor = Doctor::find($request->input('edit_id'));
         }
 
+        // Lọc danh sách bác sĩ theo từ khóa tìm kiếm
         $doctors = Doctor::when($search, function ($query, $search) {
             return $query->where('name', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%")
@@ -29,12 +29,13 @@ class AdminController extends Controller
         return view('role.adminfixdoctors', compact('doctors', 'search', 'editDoctor'));
     }
 
-    // Thêm bác sĩ
+
     public function storeDoctor(Request $request)
     {
+        // Validate dữ liệu từ form
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:doctors|unique:users',
+            'email' => 'required|email|unique:doctors|unique:users', // Email phải unique cả trong bảng doctors và users
             'password' => 'required|string|min:6',
             'specialty' => 'required|string',
             'phone' => 'required|string',
@@ -42,6 +43,7 @@ class AdminController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Xử lý ảnh (nếu có)
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
@@ -49,38 +51,217 @@ class AdminController extends Controller
             $imagePath = 'img/' . $imageName;
         }
 
+        // Thêm bác sĩ vào bảng doctors
         $doctor = Doctor::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => bcrypt($request->password), // Mã hóa mật khẩu
             'specialty' => $request->specialty,
             'phone' => $request->phone,
             'bio' => $request->bio,
             'image' => $imagePath,
         ]);
 
+        // Thêm tài khoản vào bảng users
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => 'doctor',
+            'password' => bcrypt($request->password), // Mã hóa mật khẩu
+            'role' => 'doctor', // Vai trò là bác sĩ
         ]);
 
-        return redirect()->route('admin.doctors.index')->with('success', 'Bác sĩ đã được thêm thành công.');
+        // Chuyển hướng kèm thông báo thành công
+        return redirect()->route('admin.doctors.index')->with('success', 'Bác sĩ đã được thêm thành công và có thể đăng nhập.');
     }
 
-    // Cập nhật thông tin bác sĩ
+
+    public function updateDoctor(Request $request, $id)
+    {
+        // Lấy thông tin bác sĩ cần sửa
+        $doctor = Doctor::findOrFail($id);
+
+        // Validate dữ liệu từ form
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:doctors,email,' . $doctor->id,
+            'specialty' => 'required|string',
+            'phone' => 'required|string',
+            'bio' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Xử lý ảnh (nếu có)
+        if ($request->hasFile('image')) {
+            // Xóa ảnh cũ nếu tồn tại
+            if ($doctor->image && file_exists(public_path($doctor->image))) {
+                unlink(public_path($doctor->image));
+            }
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('img'), $imageName);
+            $doctor->image = 'img/' . $imageName;
+        }
+
+        // Cập nhật thông tin bác sĩ
+        $doctor->update($request->all());
+
+        // Chuyển hướng về danh sách bác sĩ kèm thông báo
+        return redirect()->route('admin.doctors.index')->with('success', 'Thông tin bác sĩ đã được cập nhật.');
+    }
+
+
+    public function destroyDoctor($id)
+    {
+        // Tìm bác sĩ với ID
+        $doctor = Doctor::findOrFail($id);
+
+        // Tìm user liên kết với bác sĩ dựa trên email
+        $user = User::where('email', $doctor->email)->first();
+
+        // Xóa bác sĩ trong bảng doctors
+        $doctor->delete();
+
+        // Xóa user trong bảng users nếu tồn tại
+        if ($user) {
+            $user->delete();
+        }
+
+        // Chuyển hướng kèm thông báo
+        return redirect()->route('admin.doctors.index')->with('success', 'Bác sĩ và tài khoản liên kết đã được xóa thành công.');
+    }
+
+    // 📌 Hiển thị danh sách bệnh nhân đã đặt lịch
+    public function showAllPatients(Request $request)
+    {
+        $search = $request->input('search');
+
+        $patients = Appointment::with(['patient', 'doctor'])
+            ->when($search, function ($query, $search) {
+                return $query->whereHas('patient', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('appointment_date', 'ASC')
+            ->get();
+
+        return view('role.adminpatients', compact('patients', 'search'));
+    }
+
+
+    public function getDoctorsBySpecialty(Request $request)
+    {
+        $doctors = Doctor::where('specialty', $request->specialty)->get();
+        return response()->json($doctors);
+    }
+
+
+    // 📌 Hiển thị danh sách lịch hẹn với tìm kiếm và chỉnh sửa
+    public function showAppointments(Request $request)
+    {
+        $search = $request->input('search');
+        $editAppointment = null;
+
+        // Nếu có yêu cầu sửa lịch hẹn
+        if ($request->has('edit_id')) {
+            $editAppointment = Appointment::find($request->input('edit_id'));
+        }
+
+        // Lấy danh sách các chuyên khoa từ bảng bác sĩ
+        $specialties = Doctor::distinct()->pluck('specialty');
+
+        // Lấy danh sách bác sĩ để hiển thị
+        $doctors = Doctor::all();
+
+        // Truy vấn lịch hẹn với tìm kiếm
+        $appointments = Appointment::with(['doctor'])
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
+            })
+            ->orderBy('appointment_date', 'ASC')
+            ->get();
+
+        return view('role.manageappointments', compact('appointments', 'editAppointment', 'search', 'specialties', 'doctors'));
+    }
+
+
+    // 📌 Duyệt lịch hẹn
+    public function approveAppointment($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->update(['status' => 'approved']);
+        return redirect()->back()->with('success', 'Lịch hẹn đã được duyệt.');
+    }
+
+    // 📌 Từ chối lịch hẹn
+    public function rejectAppointment($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->update(['status' => 'rejected']);
+        return redirect()->back()->with('success', 'Lịch hẹn đã bị từ chối.');
+    }
+
+    // 📌 Xóa lịch hẹn
+    public function deleteAppointment($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->delete();
+        return redirect()->back()->with('success', 'Lịch hẹn đã được xóa.');
+    }
+
+    // 📌 Thêm lịch hẹn mới
+    public function storeAppointment(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:appointments,email',
+            'phone' => 'required|string',
+            'age' => 'required|integer',
+            'cccd' => 'required|string|unique:appointments,cccd',
+            'appointment_date' => 'required|date',
+            'description' => 'nullable|string',
+            'doctor_id' => 'required|exists:doctors,id',
+            'specialty' => 'required|string',
+        ]);
+
+        // Kiểm tra xem bác sĩ có tồn tại không
+        $doctor = Doctor::findOrFail($request->doctor_id);
+
+        // Tạo mới lịch hẹn
+        Appointment::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'age' => $request->age,
+            'cccd' => $request->cccd,
+            'appointment_date' => $request->appointment_date,
+            'description' => $request->description,
+            'doctor_id' => $doctor->id,
+            'specialty' => $request->specialty,
+            'status' => 'approved' // Mặc định trạng thái là chờ duyệt
+        ]);
+
+        return redirect()->route('admin.appointments.index')->with('success', 'Lịch hẹn đã được thêm thành công.');
+    }
+
+
+
+    // 📌 Cập nhật thông tin lịch hẹn
     public function updateAppointment(Request $request, $id)
     {
         $appointment = Appointment::findOrFail($id);
 
         $request->validate([
+            'specialty' => 'required|string',
+            'doctor_id' => 'required|exists:doctors,id',
+            'appointment_date' => 'required|date',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:appointments,email,' . $appointment->id,
+            'email' => 'required|email',
             'phone' => 'required|string',
             'age' => 'required|integer',
-            'cccd' => 'required|string|unique:appointments,cccd,' . $appointment->id,
-            'appointment_date' => 'required|date',
+            'cccd' => 'required|string',
             'description' => 'nullable|string',
         ]);
 
@@ -89,119 +270,4 @@ class AdminController extends Controller
         return redirect()->route('admin.appointments.index')->with('success', 'Lịch hẹn đã được cập nhật.');
     }
 
-
-    // Xóa bác sĩ
-    public function destroyDoctor($id)
-    {
-        $doctor = Doctor::findOrFail($id);
-        $user = User::where('email', $doctor->email)->first();
-
-        $doctor->delete();
-        if ($user) {
-            $user->delete();
-        }
-
-        return redirect()->route('admin.doctors.index')->with('success', 'Bác sĩ và tài khoản liên kết đã được xóa.');
-    }
-
-    // Hiển thị danh sách bệnh nhân
-    public function showAllPatients(Request $request)
-    {
-        $search = $request->input('search');
-        $editPatient = null;
-
-        if ($request->has('edit_id')) {
-            $editPatient = Patient::find($request->input('edit_id'));
-        }
-
-        $patients = Patient::when($search, function ($query, $search) {
-            return $query->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%")
-                ->orWhere('phone', 'like', "%{$search}%");
-        })->get();
-
-        return view('role.adminpatients', compact('patients', 'editPatient', 'search'));
-    }
-
-    // Thêm bệnh nhân
-    public function storePatient(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:patients',
-            'phone' => 'required|string',
-            'age' => 'required|integer',
-            'cccd' => 'required|string|unique:patients',
-        ]);
-
-        Patient::create($request->all());
-
-        return redirect()->route('admin.patients.index')->with('success', 'Bệnh nhân đã được thêm thành công.');
-    }
-
-    // Cập nhật thông tin bệnh nhân
-    public function updatePatient(Request $request, $id)
-    {
-        $patient = Patient::findOrFail($id);
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:patients,email,' . $patient->id,
-            'phone' => 'required|string',
-            'age' => 'required|integer',
-            'cccd' => 'required|string|unique:patients,cccd,' . $patient->id,
-        ]);
-
-        $patient->update($request->all());
-
-        return redirect()->route('admin.patients.index')->with('success', 'Thông tin bệnh nhân đã được cập nhật.');
-    }
-
-    // Xóa bệnh nhân
-    public function destroyPatient($id)
-    {
-        $patient = Patient::findOrFail($id);
-        $patient->delete();
-
-        return redirect()->route('admin.patients.index')->with('success', 'Bệnh nhân đã bị xóa.');
-    }
-
-    // Hiển thị danh sách lịch hẹn
-    public function showAppointments(Request $request)
-    {
-        $search = $request->input('search');
-        $editAppointment = null;
-
-        if ($request->has('edit_id')) {
-            $editAppointment = Appointment::find($request->input('edit_id'));
-        }
-
-        $appointments = Appointment::when($search, function ($query, $search) {
-            return $query->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%")
-                ->orWhere('phone', 'like', "%{$search}%");
-        })->get();
-
-        return view('role.manageappointments', compact('appointments', 'editAppointment', 'search'));
-    }
-
-    // Xử lý duyệt hoặc từ chối lịch hẹn
-    public function approveAppointment($id)
-    {
-        Appointment::findOrFail($id)->update(['status' => 'approved']);
-        return redirect()->back()->with('success', 'Lịch hẹn đã được duyệt.');
-    }
-
-    public function rejectAppointment($id)
-    {
-        Appointment::findOrFail($id)->update(['status' => 'rejected']);
-        return redirect()->back()->with('success', 'Lịch hẹn đã bị từ chối.');
-    }
-
-    // Xóa lịch hẹn
-    public function deleteAppointment($id)
-    {
-        Appointment::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Lịch hẹn đã được xóa.');
-    }
 }

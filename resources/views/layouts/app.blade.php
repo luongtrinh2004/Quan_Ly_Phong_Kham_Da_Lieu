@@ -83,9 +83,9 @@
     </nav>
 
     @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
     @endif
     <div class="content">
         @yield('content')
@@ -158,102 +158,102 @@
     </footer>
 
     <style>
-    /* Font chữ từ Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+        /* Font chữ từ Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-    /* Footer Styles */
-    .footer {
-        background-color: #b3e5fc;
-        color: #003366;
-        font-family: 'Poppins', sans-serif;
-        padding: 40px 10%;
-    }
-
-    .footer-col {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .footer-logo img {
-        max-width: 180px;
-        /* Giới hạn kích thước logo */
-        display: block;
-        margin-bottom: 10px;
-        /* Tạo khoảng cách với nội dung */
-    }
-
-    .footer-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: #0056b3;
-        margin-bottom: 12px;
-    }
-
-    .footer a {
-        color: #003366;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 400;
-    }
-
-    .footer a:hover {
-        color: #0056b3;
-        text-decoration: underline;
-    }
-
-    .footer p {
-        font-size: 14px;
-        font-weight: 400;
-    }
-
-    .footer .list-unstyled li {
-        margin-bottom: 6px;
-    }
-
-    .qr-box {
-        background: white;
-        padding: 10px;
-        text-align: center;
-        font-weight: 500;
-        border: 2px solid #003366;
-        border-radius: 5px;
-    }
-
-    /* Mạng xã hội */
-    .social-icons {
-        display: flex;
-        gap: 10px;
-        margin-top: 12px;
-    }
-
-    .social-icons img {
-        width: 30px;
-        height: 30px;
-        transition: transform 0.2s ease-in-out;
-    }
-
-    .social-icons img:hover {
-        transform: scale(1.1);
-    }
-
-    .footer-divider {
-        margin: 20px 0;
-        border-top: 1px solid #0056b3;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .footer .row {
-            text-align: center;
+        /* Footer Styles */
+        .footer {
+            background-color: #b3e5fc;
+            color: #003366;
+            font-family: 'Poppins', sans-serif;
+            padding: 40px 10%;
         }
 
         .footer-col {
-            align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
+        .footer-logo img {
+            max-width: 180px;
+            /* Giới hạn kích thước logo */
+            display: block;
+            margin-bottom: 10px;
+            /* Tạo khoảng cách với nội dung */
+        }
 
-    }
+        .footer-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0056b3;
+            margin-bottom: 12px;
+        }
+
+        .footer a {
+            color: #003366;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .footer a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .footer p {
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .footer .list-unstyled li {
+            margin-bottom: 6px;
+        }
+
+        .qr-box {
+            background: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 500;
+            border: 2px solid #003366;
+            border-radius: 5px;
+        }
+
+        /* Mạng xã hội */
+        .social-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .social-icons img {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .social-icons img:hover {
+            transform: scale(1.1);
+        }
+
+        .footer-divider {
+            margin: 20px 0;
+            border-top: 1px solid #0056b3;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .footer .row {
+                text-align: center;
+            }
+
+            .footer-col {
+                align-items: center;
+            }
+
+
+        }
     </style>
 
 

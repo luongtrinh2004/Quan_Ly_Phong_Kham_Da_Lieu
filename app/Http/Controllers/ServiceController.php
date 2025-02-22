@@ -15,6 +15,13 @@ class ServiceController extends Controller
         return view('services', compact('services')); 
     }
 
+    // Hiển thị danh sách dịch vụ cho bệnh nhân view home
+    public function index_home()
+    {
+        $services = Service::all(); 
+        return view('home', compact('services')); 
+    }
+
     // Hiển thị giao diện quản lý dịch vụ cho Admin
     public function manageServices()
     {

@@ -84,7 +84,14 @@
                     </div>
                 </div>
             </div>
-
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Quản lý Hồ Sơ bệnh nhân</h5>
+                        <a href="{{ url('/admin/invoices') }}" class="btn btn-primary">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body text-center">
@@ -109,18 +116,11 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body text-center">
-                        <h5 class="card-title">Quản lý Hồ Sơ Bệnh Nhân (file adminpatients) </h5>
-                        <a href="{{ url('/admin/patients') }}" class="btn btn-primary">Xem chi tiết</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Hóa Đơn và Thanh Toán</h5>
+                        <h5 class="card-title">Hóa Đơn và Thống Kê</h5>
                         <a href="{{ url('/admin/#') }}" class="btn btn-primary">Xem chi tiết</a>
                     </div>
                 </div>
