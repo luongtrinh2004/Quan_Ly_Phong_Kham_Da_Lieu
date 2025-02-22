@@ -32,47 +32,49 @@ class AdminController extends Controller
 
     public function storeDoctor(Request $request)
     {
-        // Validate dữ liệu từ form
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:doctors|unique:users', // Email phải unique cả trong bảng doctors và users
+            'email' => 'required|email|unique:doctors|unique:users',
             'password' => 'required|string|min:6',
             'specialty' => 'required|string',
             'phone' => 'required|string',
             'bio' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|file|max:5120|mimes:jpeg,png,jpg,gif', // Giống như dịch vụ
         ]);
 
-        // Xử lý ảnh (nếu có)
-        $imagePath = null;
         if ($request->hasFile('image')) {
-            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
-            $request->file('image')->move(public_path('img'), $imageName);
-            $imagePath = 'img/' . $imageName;
+            // Tạo tên file duy nhất để tránh trùng lặp
+            $imageName = time() . '_' . uniqid() . '.' . $request->image->getClientOriginalExtension();
+            $request->image->move(public_path('uploads'), $imageName);
+            $filePath = 'uploads/' . $imageName; // Lưu đường dẫn vào cơ sở dữ liệu
+        } else {
+            $filePath = null;
         }
 
         // Thêm bác sĩ vào bảng doctors
         $doctor = Doctor::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password), // Mã hóa mật khẩu
+            'password' => bcrypt($request->password),
             'specialty' => $request->specialty,
             'phone' => $request->phone,
             'bio' => $request->bio,
-            'image' => $imagePath,
+            'image' => $filePath,
         ]);
 
         // Thêm tài khoản vào bảng users
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password), // Mã hóa mật khẩu
-            'role' => 'doctor', // Vai trò là bác sĩ
+            'password' => bcrypt($request->password),
+            'role' => 'admindoctor',
         ]);
 
-        // Chuyển hướng kèm thông báo thành công
-        return redirect()->route('admin.doctors.index')->with('success', 'Bác sĩ đã được thêm thành công và có thể đăng nhập.');
+        return redirect()->route('admin.doctors.index')
+            ->with('success', 'Bác sĩ đã được thêm thành công và có thể đăng nhập.');
     }
+
+
 
 
     public function updateDoctor(Request $request, $id)
