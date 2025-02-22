@@ -44,6 +44,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/admin/doctors/{id}', [AdminController::class, 'destroyDoctor'])->name('admin.doctors.destroy');
 
     // Admin quản lý lịch khám (có thể duyệt, từ chối)
+    Route::post('/admin/appointments', [AdminController::class, 'storeAppointment'])->name('admin.appointments.store');
     Route::get('/admin/appointments', [AdminController::class, 'showAppointments'])->name('admin.appointments.index');
     Route::put('/admin/appointments/{id}/approve', [AdminController::class, 'approveAppointment'])->name('admin.appointments.approve');
     Route::put('/admin/appointments/{id}/reject', [AdminController::class, 'rejectAppointment'])->name('admin.appointments.reject');

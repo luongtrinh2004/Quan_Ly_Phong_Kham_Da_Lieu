@@ -226,10 +226,16 @@ class AdminController extends Controller
             'specialty' => 'required|string',
         ]);
 
-        // Kiểm tra xem bác sĩ có tồn tại không
-        $doctor = Doctor::findOrFail($request->doctor_id);
+        // Kiểm tra bác sĩ
+        $doctor = Doctor::find($request->doctor_id);
+        if (!$doctor) {
+            return back()->with('error', 'Bác sĩ không tồn tại');
+        }
 
-        // Tạo mới lịch hẹn
+        // Debug kiểm tra dữ liệu nhận được
+        // dd($request->all());
+
+        // Tạo lịch hẹn mới
         Appointment::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -240,11 +246,12 @@ class AdminController extends Controller
             'description' => $request->description,
             'doctor_id' => $doctor->id,
             'specialty' => $request->specialty,
-            'status' => 'approved' // Mặc định trạng thái là chờ duyệt
+            'status' => 'approved',
         ]);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Lịch hẹn đã được thêm thành công.');
+        return redirect()->route('admin.appointments.index')->with('success', 'Lịch hẹn đã được thêm.');
     }
+
 
 
 
