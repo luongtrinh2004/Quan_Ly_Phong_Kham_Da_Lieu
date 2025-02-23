@@ -27,12 +27,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
-// Routes cho bệnh nhân
-Route::middleware(['auth', 'role:patient'])->group(function () {
-    Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
-    Route::get('/appointments', [PatientController::class, 'appointments'])->name('patients.appointments');
-    Route::post('/appointments', [PatientController::class, 'bookAppointment'])->name('patients.book');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
 });
+
 
 // Routes cho Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
