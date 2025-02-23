@@ -157,8 +157,9 @@
                 <div class="col-md-6">
                     <div class="card shadow-lg p-4 text-center">
                         <div class="card-body">
-                            <h3 class="card-title" style="font-size: 22px; font-weight: 600;">Thông tin bệnh nhân</h3>
-                            <a href="{{ url('/admindoctor/patients') }}" class="btn btn-lg btn-primary mt-3">Xem chi
+                            <h3 class="card-title" style="font-size: 22px; font-weight: 600;">Hồ Sơ Bệnh Nhân</h3>
+                            <a href="{{ url('/admindoctor/medicalrecords') }}" class="btn btn-lg btn-primary mt-3">Xem
+                                chi
                                 tiết</a>
                         </div>
                     </div>

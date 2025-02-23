@@ -127,7 +127,7 @@
               <p style="text-align: justify; font-size: 16px;"><span style="font-size: 16px; white-space: pre-wrap;">PHENIKAAMEC nuôi dưỡng khát vọng cống hiến, vun đắp niềm tin, nỗ lực vươn tầm nhằm mang đến các giá trị cho xã hội và nâng cao sức khỏe cộng đồng với mục tiêu:</span></p>
             </div>
           </div>
-          <img src="./img/img1.webp" alt="" class="object-cover h-[312px] rounded-xl w-full" style="">
+          <img src="./img/img36.webp" alt="" class="object-cover h-[312px] rounded-xl w-full" style="">
         </div>
         <h2 class="title-blue-1">Tầm nhìn - sứ mệnh - giá trị cốt lõi</h2>
         <div class="grid-3" style="margin:20px 25px;margin-left: 85px;">
@@ -272,40 +272,38 @@
         <div class="flex w-full justify-center">
           <button class="load-more">Xem thêm &gt;&gt;</button>
         </div>
-        <h2 class="title-blue-1">Công ty cổ phần y học vĩnh thiện</h2>
-        <p style="text-align: justify; font-size: 16px;"><span style="font-size: 16px ; white-space: pre-wrap;">Là đơn vị chủ quản của Bệnh viện Đại học Phenikaa, nằm trong hệ sinh thái chăm sóc sức khỏe của Tập đoàn Phenikaa, Công ty CP Y học Vĩnh Thiện là đơn vị bảo hộ và quản lý các hoạt động cho các đơn vị trong lĩnh vực chăm sóc sức khỏe của Tập đoàn và đảm bảo công tác vận hành, đào tạo chuyên môn, nghiên cứu khoa học.<br>Trong mảng Chăm sóc sức khỏe, các dự án trọng tâm của Vĩnh Thiện bao gồm: Bệnh viện Đại học Phenikaa và Hệ thống phòng khám vệ tinh, Trung tâm Y khoa phục vụ giảng dạy và nghiên cứu, Hệ thống bệnh án điện tử, quản lý bệnh viện theo hướng số hóa, triển khai Y tế từ xa…. Với Hệ sinh thái Khoa học sức khỏe Phenikaa được bảo hộ bởi Công ty Cổ phần Vĩnh Thiện, Tập đoàn Phenikaa đặt mục tiêu trở thành thương hiệu uy tín hàng đầu chuyên cung cấp các sản phẩm dịch vụ chất lượng vượt trội trong lĩnh vực Chăm sóc sức khỏe, góp phần nâng cao chất lượng cuộc sống, mang đến sức khỏe, bình an và hạnh phúc cho người Việt.</span></p>
-        <div class="grid-2" style="margin: 0 55px;margin-bottom: 2.5rem;">
-          <img src="./img/img17.webp" alt="" class="object-cover h-[312px] rounded-xl w-full" style="">
-          <div class="relative" style="background-color: rgb(231 249 255 / var(--tw-bg-opacity, 1));">
-            <div class="article-content scrollbar-thin leading-loose overflow-y-auto h-[312px] flex-col" style="font-weight: 400;font-size: .875rem;padding-right: .5rem;padding: 25px">
-              <h3 style="color: rgb(3 66 142 / var(--tw-text-opacity, 1));font-size: 16px;">Bệnh viện Đại học Phenikaa</h3>
-              <p style="text-align: justify; font-size: 16px;"><span style="font-size: 16px; white-space: pre-wrap;">Bệnh viện Đại học Phenikaa là dự án trọng điểm trong lĩnh vực chăm sóc sức khỏe của Tập đoàn Phenikaa. Với tổng diện tích sàn xây dựng xấp xỉ 90.000 m2 trong khuôn viên rộng hơn 3,1 hecta gồm 4 tòa nhà chính và các công trình cảnh quan, giao thông đáp ứng hơn 2000 lượt khám mỗi ngày với gần 800 giường bệnh phục vụ điều trị nội trú. Bệnh viện Đại học Phenikaa mang nhiều kỳ vọng sẽ tạo dựng được dấu ấn của Phenikaa trong xu hướng xã hội hóa y tế hiện nay với tầm nhìn</span></p>
-            </div>
+
+        <h2 class="title-blue-1">Về hoạt động của PhenikaaMec</h2>
+        <div class="grid-3" style="margin:20px 25px;margin-left: 85px;">
+          <div class="grid-item">
+              <img src="/img/img32.webp" alt="Nghiên cứu khoa học">
+              <h3 class="hover-blue" style="cursor:pointer;">Nghiên cứu khoa học</h3>
           </div>
-          <div class="relative" style="background-color: rgb(231 249 255 / var(--tw-bg-opacity, 1));">
-            <div class="article-content scrollbar-thin leading-loose overflow-y-auto h-[312px] flex-col" style="font-weight: 400;font-size: .875rem;padding-right: .5rem;padding: 25px">
-              <h3 style="color: rgb(3 66 142 / var(--tw-text-opacity, 1));font-size: 16px;">Phòng khám Đa khoa Đại học Phenikaa</h3>
-              <p style="text-align: justify; font-size: 16px;"><span style="font-size: 16px; white-space: pre-wrap;">Phòng khám Đa khoa Bệnh viện Đại học Phenikaa thuộc Hệ sinh thái chăm sóc sức khỏe Phenikaa với nền tảng Con người tri thức và nhân văn – Hệ thống thông minh – Công nghệ tiên tiến, mang đến chất lượng điều trị xuất sắc, dịch vụ chăm sóc hoàn hảo, kết quả nghiên cứu mang tính đột phá và giáo dục nâng tầm tri thức trong lĩnh vực y học vì một cộng đồng khỏe mạnh, nhân văn và tri thức.   Với dịch vụ khám, chữa bệnh chất lượng cao và tinh thần phục vụ chu đáo, Phòng Khám Đa khoa Bệnh viện Đại học Phenikaa là một địa chỉ khám, chữa bệnh tin cậy cho người dân Thành phố Hà Nội và các khu vực lân cận.</span></p>
-            </div>
+          <div class="grid-item">
+              <img src="/img/img33.webp" alt="Đào tạo">
+              <h3 class="hover-blue" style="cursor:pointer;">Đào tạo</h3>
           </div>
-          <img src="./img/img18.webp" alt="" class="object-cover h-[312px] rounded-xl w-full" style="">
-          <img src="./img/img19.webp" alt="" class="object-cover h-[312px] rounded-xl w-full" style="">
-          <div class="relative" style="background-color: rgb(231 249 255 / var(--tw-bg-opacity, 1));">
-            <div class="article-content scrollbar-thin leading-loose overflow-y-auto h-[312px] flex-col" style="font-weight: 400;font-size: .875rem;padding-right: .5rem;padding: 25px">
-              <h3 style="color: rgb(3 66 142 / var(--tw-text-opacity, 1));font-size: 16px;">Phòng khám Răng Hàm Mặt Đại học Phenikaa</h3>
-              <p style="text-align: justify; font-size: 16px;"><span style="font-size: 16px; white-space: pre-wrap;">Cuối năm 2023, Phòng khám Răng Hàm Mặt đại học Phenikaa ra đời và đi vào vận hành, đánh dấu bước đầu tiên trong việc hiện thực hóa các cam kết trong lĩnh vực Chăm sóc sức khỏe của Tập đoàn. Sứ mệnh của Phòng khám không chỉ dừng lại ở việc chăm sóc răng miệng truyền thống, mà còn tạo ra môi trường nuôi dưỡng tối ưu, nơi sức khỏe răng miệng và sức khỏe tổng thể của khách hàng được đặt lên hàng đầu, mang đến công nghệ tiên tiến, đội ngũ chuyên nghiệp với kĩ năng cao, cam kết cung cấp dịch vụ tốt nhất phù hợp với nhu cầu cá nhân của từng người. Với dịch vụ khám, chữa bệnh chất lượng cao và tinh thần phục vụ chu đáo, Phòng Khám Đa khoa Bệnh viện Đại học Phenikaa là một địa chỉ khám, chữa bệnh tin cậy cho người dân Thành phố Hà Nội và các khu vực lân cận.</span></p>
-            </div>
+          <div class="grid-item">
+              <img src="/img/img34.webp" alt="Hội thảo và hợp tác">
+              <h3 class="hover-blue" style="cursor:pointer;">Hội thảo và hợp tác</h3>
           </div>
         </div>
-        
-        
 
       </div>
+    
+
     </div>
   </div>
 </div>
 
 <div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h2 class="mb-3 title-blue-1" style="margin-top: -5px;">Hợp tác bác sĩ</h2>
+            <p class="lead">Bệnh viện Đại học Phenikaa là một trong số ít bệnh viện tại Việt Nam triển khai chương trình hợp tác với các chuyên gia, bác sĩ đến từ nhiều bệnh viện lớn cả trong nước và quốc tế.</p>
+        </div>
+    </div>
+    <img src="/img/img35.webp" alt="Hợp tác bác sĩ" style="height: 375px;margin-bottom: 70px;">
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
             <h2 class="mb-3">Liên hệ với chúng tôi</h2>
