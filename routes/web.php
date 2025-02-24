@@ -13,6 +13,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\MedicalRecordController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorMedicalRecordController;
+use App\Http\Controllers\InvoiceController;
+
 
 
 // Trang chủ
@@ -46,6 +48,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/doctors/{id}/edit', [AdminController::class, 'editDoctor'])->name('admin.doctors.edit');
     Route::post('/admin/doctors/{id}/update', [AdminController::class, 'updateDoctor'])->name('admin.doctors.update');
     Route::delete('/admin/doctors/{id}', [AdminController::class, 'destroyDoctor'])->name('admin.doctors.destroy');
+
 
     // Admin quản lý lịch khám (có thể duyệt, từ chối)
     Route::get('/admin/appointments', [AdminController::class, 'showAppointments'])->name('admin.appointments.index');
@@ -97,6 +100,12 @@ Route::middleware(['auth', 'role:admindoctor'])->group(function () {
         Route::get('/admindoctor/medicalrecords/{id}/edit', [DoctorMedicalRecordController::class, 'edit'])->name('admindoctor.medicalrecords.edit');
         Route::put('/admindoctor/medicalrecords/{id}', [DoctorMedicalRecordController::class, 'update'])->name('admindoctor.medicalrecords.update');
         Route::delete('/admindoctor/medicalrecords/{id}', [DoctorMedicalRecordController::class, 'destroy'])->name('admindoctor.medicalrecords.destroy');
+
+        Route::get('/admindoctor/invoices/create', [InvoiceController::class, 'create'])->name('admindoctor.invoices.create');
+        Route::post('/admindoctor/invoices', [InvoiceController::class, 'store'])->name('admindoctor.invoices.store');
+        Route::get('/admindoctor/invoices', [InvoiceController::class, 'index'])->name('admindoctor.invoices.index');
+        Route::resource('admindoctor/invoices', InvoiceController::class);
+
     });
 });
 
@@ -166,3 +175,6 @@ Route::post('/', [SupportController::class, 'store'])->name('support.store_home'
 // Chatbot
 Route::get('/chatbot', [ChatbotController::class, 'index'])->name('chatbot.index');
 Route::post('/chatbot/send', [ChatbotController::class, 'sendMessage'])->name('chatbot.send');
+Route::prefix('admindoctor')->name('admindoctor.')->group(function () {
+    Route::resource('invoices', InvoiceController::class);
+});
