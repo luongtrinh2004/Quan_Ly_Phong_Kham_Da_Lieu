@@ -14,6 +14,7 @@ use App\Http\Controllers\MedicalRecordController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorMedicalRecordController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\AdminInvoiceController;
 
 
 
@@ -177,4 +178,15 @@ Route::get('/chatbot', [ChatbotController::class, 'index'])->name('chatbot.index
 Route::post('/chatbot/send', [ChatbotController::class, 'sendMessage'])->name('chatbot.send');
 Route::prefix('admindoctor')->name('admindoctor.')->group(function () {
     Route::resource('invoices', InvoiceController::class);
+});
+
+Route::prefix('admin/invoices')->group(function () {
+    Route::get('/', [AdminInvoiceController::class, 'index'])->name('admin.invoices.index');
+    Route::get('/create', [AdminInvoiceController::class, 'create'])->name('admin.invoices.create');
+    Route::post('/', [AdminInvoiceController::class, 'store'])->name('admin.invoices.store');
+    Route::get('/{id}', [AdminInvoiceController::class, 'show'])->name('admin.invoices.show');
+    Route::get('/{id}/edit', [AdminInvoiceController::class, 'edit'])->name('admin.invoices.edit');
+    Route::put('/{id}', [AdminInvoiceController::class, 'update'])->name('admin.invoices.update');
+    Route::put('/admin/invoices/{id}', [AdminInvoiceController::class, 'update'])->name('admin.invoices.update');
+    Route::delete('/{id}', [AdminInvoiceController::class, 'destroy'])->name('admin.invoices.destroy');
 });

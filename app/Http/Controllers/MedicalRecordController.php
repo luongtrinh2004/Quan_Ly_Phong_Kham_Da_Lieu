@@ -28,7 +28,8 @@ class MedicalRecordController extends Controller
         }
 
         // Áp dụng tìm kiếm vào danh sách hồ sơ bệnh án
-        $medicalRecords = $query->latest()->paginate(10);
+        $medicalRecords = $query->orderBy('id', 'asc')->paginate(10);
+
 
         // Lấy danh sách bác sĩ cho dropdown
         $doctors = Doctor::all();

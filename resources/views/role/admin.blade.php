@@ -121,7 +121,7 @@
                 <div class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title">Hóa Đơn và Thống Kê</h5>
-                        <a href="{{ url('/admin/#') }}" class="btn btn-primary">Xem chi tiết</a>
+                        <a href="{{ url('/admin/invoices') }}" class="btn btn-primary">Xem chi tiết</a>
                     </div>
                 </div>
             </div>

@@ -167,7 +167,7 @@
                     <tbody>
                         @foreach($medicalRecords as $record)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $medicalRecords->firstItem() + $loop->index }}</td>
                                 <td>{{ optional($record->doctor)->name ?? 'Không xác định' }}</td>
                                 <td>{{ $record->name }}</td>
                                 <td>{{ $record->email }}</td>
@@ -186,18 +186,14 @@
                                 <td>{{ $record->prescription }}</td>
                                 <td>{{ $record->notes }}</td>
                                 <td>
-                                    <!-- Nút Sửa: sử dụng route index với query parameter edit_id -->
                                     <a href="{{ route('admin.medicalrecords.index', ['edit_id' => $record->id]) }}"
                                         class="btn btn-warning btn-sm">Sửa</a>
-                                    <!-- Nút Xóa -->
                                     <form method="POST" action="{{ route('admin.medicalrecords.destroy', $record->id) }}"
                                         class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Bạn có chắc chắn muốn xóa hồ sơ bệnh án này?')">
-                                            Xóa
-                                        </button>
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa hồ sơ bệnh án này?')">Xóa</button>
                                     </form>
                                 </td>
                             </tr>
