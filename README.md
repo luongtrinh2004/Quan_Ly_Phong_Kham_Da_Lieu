@@ -61,6 +61,26 @@ composer install
 
 ### 📌 4. Tạo database từ file laravel_backup.sql
 
+```sh
+
+mysql -u root -p ten_database < laravel_backup.sql
+
+```
+
+### 📌 4. Cập nhật file .env với thông tin database của bạn:
+
+```sh
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ten_database
+DB_USERNAME=root
+DB_PASSWORD=your_password
+
+
+```
+
 ### 📌 5. Chạy ứng dụng
 
 ```sh
