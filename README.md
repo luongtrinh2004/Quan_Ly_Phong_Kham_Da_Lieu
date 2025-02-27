@@ -94,10 +94,24 @@ php artisan serve
 ### 🔹 Hóa đơn & Thanh toán
 
 em đang phát triển ạ
-![Billing & Payments](https://via.placeholder.com/800x400?text=Billing+&+Payments)
+![Billing & Payments](public/img/hoadonthongke.png)
 
 ### 🔹 Hỗ trợ bệnh nhân
 
 ![Patient Support](public/img/quanlyhotroreadme.png)
 
 ---
+
+### 🔹 Deploy Dự Án
+
+```sh
+https://31c4-118-70-185-2.ngrok-free.app
+
+```
+
+### 🔹 Link demo
+
+```sh
+.................
+
+```
