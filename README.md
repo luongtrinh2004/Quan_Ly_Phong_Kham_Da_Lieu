@@ -124,6 +124,13 @@ https://31c4-118-70-185-2.ngrok-free.app
 
 ```
 
+### 🔹 Link repo
+
+```sh
+https://github.com/luongtrinh2004/Quan_Ly_Phong_Kham_Da_Lieu
+
+```
+
 ### 🔹 Link demo
 
 ```sh
