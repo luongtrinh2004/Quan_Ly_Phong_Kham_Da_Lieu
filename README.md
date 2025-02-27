@@ -26,7 +26,7 @@
 
 | Công nghệ  | Phiên bản |
 | ---------- | --------- |
-| Laravel    | 7.x       |
+| Laravel    | >7.x      |
 | Bootstrap  | 5.x       |
 | MySQL      | 8.x       |
 | JavaScript | ES6+      |
@@ -39,7 +39,7 @@
 ### 📌 1. Clone repository
 
 ```sh
-git clone https://github.com/luongtrinh2004/Patient_Management.git
+git clone https://github.com/luongtrinh2004/Quan_Ly_Phong_Kham_Da_Lieu
 cd ...
 ```
 
@@ -59,11 +59,7 @@ composer install
 
 ```
 
-### 📌 4. Chạy database migration và seed dữ liệu mẫu
-
-```sh
-php artisan migrate --seed
-```
+### 📌 4. Tạo database từ file laravel_backup.sql
 
 ### 📌 5. Chạy ứng dụng
 
