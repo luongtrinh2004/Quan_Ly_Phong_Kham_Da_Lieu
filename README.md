@@ -89,7 +89,6 @@ php artisan serve
 
 ### 🔹 Hóa đơn & Thanh toán
 
-em đang phát triển ạ
 ![Billing & Payments](public/img/hoadonthongke.png)
 
 ### 🔹 Hỗ trợ bệnh nhân
