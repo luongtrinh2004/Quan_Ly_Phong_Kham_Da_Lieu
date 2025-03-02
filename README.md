@@ -34,6 +34,14 @@
 
 ---
 
+### 🔹 Sơ đồ Use-Case
+
+![Use-Case](public/img/uml.png)
+
+### 🔹 Sơ đồ chức năng
+
+![Sơ đồ chức năng](public/img/sodochucnang.png.png)
+
 ## 🛠 Cài đặt & Khởi chạy
 
 ### 📌 1. Clone repository
