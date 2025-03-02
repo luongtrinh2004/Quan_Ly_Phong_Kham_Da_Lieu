@@ -40,7 +40,7 @@
 
 ### 🔹 Sơ đồ chức năng
 
-![Sơ đồ chức năng](public/img/sodochucnang.png.png)
+![Sơ đồ chức năng](public/img/sodochucnang.png)
 
 ## 🛠 Cài đặt & Khởi chạy
 
