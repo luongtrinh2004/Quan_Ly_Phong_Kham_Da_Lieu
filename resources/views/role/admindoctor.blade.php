@@ -18,7 +18,7 @@
         <div class="py-3" style="background-color: #e0f7fa; border-bottom: 1px solid #ccc;">
             <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <!-- Logo -->
-                <a href="{{ url('/') }}" class="d-flex align-items-center">
+                <a href="{{ url('/admindoctor/dashboard') }}" class="d-flex align-items-center">
                     <img src="/img/logo.webp" alt="Logo" style="height: 50px;">
                 </a>
 
@@ -73,74 +73,99 @@
 
             <div class="row justify-content-center">
                 <!-- Thông tin bác sĩ -->
-                <div class="col-lg-8">
-                    <div class="card shadow-lg border-0 rounded-lg">
-                        <div class="card-body text-center p-5">
-                            <!-- Hình ảnh bác sĩ -->
-                            <div class="d-flex flex-column align-items-center">
-                                <img src="{{ asset($doctor->image) }}" class="rounded-circle mb-3"
-                                    style="width: 180px; height: 180px; object-fit: cover; border: 5px solid #007bff;"
-                                    alt="{{ $doctor->name }}">
+                <div class="col-lg-5">
+                    <div class="card border rounded shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <!-- Hình ảnh bác sĩ với viền xanh đậm -->
+                            <div
+                                style="border: 3px solid #0056b3; border-radius: 50%; padding: 5px; display: inline-block;">
+                                <img src="{{ asset($doctor->image) }}" class="rounded-circle"
+                                    style="width: 130px; height: 130px; object-fit: cover;" alt="{{ $doctor->name }}">
+                            </div>
+                            <h3 class="mt-2" style="font-size: 22px; font-weight: 700; color: #0056b3;">
+                                {{ $doctor->name }}
+                            </h3>
 
-                                <h2 class="mb-3"
-                                    style="font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 600;">
-                                    {{ $doctor->name }}
-                                </h2>
-                            </div>
-                            <!-- Thông tin bác sĩ -->
-                            <div class="info-box mx-auto p-4 mt-3" style="max-width: 600px;">
-                                <div class="info-row">
-                                    <span class="info-label">Chuyên Khoa</span>
-                                    <span class="info-value">{{ $doctor->specialty }}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Email</span>
-                                    <span class="info-value">{{ $doctor->email }}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Số điện thoại</span>
-                                    <span class="info-value">{{ $doctor->phone }}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Giới thiệu</span>
-                                    <span class="info-value">{{ $doctor->bio ?: 'Chưa cập nhật' }}</span>
-                                </div>
-                            </div>
+                            <!-- Thông tin bác sĩ (Sát trái/phải) -->
+                            <table class="table table-sm mt-3">
+                                <tbody>
+                                    <tr>
+                                        <th class="text-start">Chuyên khoa:</th>
+                                        <td class="text-end">{{ $doctor->specialty }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-start">Email:</th>
+                                        <td class="text-end">{{ $doctor->email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-start">Điện thoại:</th>
+                                        <td class="text-end">{{ $doctor->phone }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Giờ làm việc -->
+                            <h5 class="mt-3 mb-2">Giờ làm việc</h5>
+                            <table class="table table-sm text-center border">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Ngày</th>
+                                        <th>Ca làm việc</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $workingHours = is_array($doctor->working_hours) ? $doctor->working_hours :
+                                            json_decode($doctor->working_hours, true) ?? [];
+                                    @endphp
+                                    @foreach($workingHours as $schedule)
+                                                                    <tr>
+                                                                        <td>
+                                                                            {{ __('Thứ') }}
+                                                                            {{ $schedule['day'] == 'Monday' ? 'Hai' :
+                                        ($schedule['day'] == 'Tuesday' ? 'Ba' :
+                                            ($schedule['day'] == 'Wednesday' ? 'Tư' :
+                                                ($schedule['day'] == 'Thursday' ? 'Năm' :
+                                                    ($schedule['day'] == 'Friday' ? 'Sáu' :
+                                                        ($schedule['day'] == 'Saturday' ? 'Bảy' : 'Chủ Nhật'))))) }}
+                                                                        </td>
+                                                                        <td>{{ $schedule['shift'] == 'morning' ? '08:00 - 12:00' : '14:00 - 18:00' }}
+                                                                        </td>
+                                                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- CSS giúp cân đối và chuyên nghiệp hơn -->
+            <!-- CSS giúp bố cục cân đối, đẹp hơn -->
             <style>
-            .info-box {
-                background: #f8f9fa;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
+                .table th {
+                    font-weight: 600;
+                }
 
-            .info-row {
-                display: flex;
-                justify-content: space-between;
-                padding: 12px 0;
-                font-size: 18px;
-                border-bottom: 1px solid #ddd;
-            }
+                .table-sm td,
+                .table-sm th {
+                    padding: 8px;
+                }
 
-            .info-row:last-child {
-                border-bottom: none;
-            }
+                .border {
+                    border: 1px solid #ddd;
+                }
 
-            .info-label {
-                font-weight: 600;
-                color: #333;
-            }
+                .table-light {
+                    background-color: #f8f9fa;
+                }
 
-            .info-value {
-                text-align: right;
-                color: #555;
-            }
+                .card {
+                    border: 1px solid #ddd;
+                }
             </style>
+
+
 
 
             <!-- Chức năng quản lý -->
@@ -233,102 +258,102 @@
         </footer>
 
         <style>
-        /* Font chữ từ Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+            /* Font chữ từ Google Fonts */
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-        /* Footer Styles */
-        .footer {
-            background-color: #b3e5fc;
-            color: #003366;
-            font-family: 'Poppins', sans-serif;
-            padding: 40px 10%;
-        }
-
-        .footer-col {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .footer-logo img {
-            max-width: 180px;
-            /* Giới hạn kích thước logo */
-            display: block;
-            margin-bottom: 10px;
-            /* Tạo khoảng cách với nội dung */
-        }
-
-        .footer-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #0056b3;
-            margin-bottom: 12px;
-        }
-
-        .footer a {
-            color: #003366;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 400;
-        }
-
-        .footer a:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-
-        .footer p {
-            font-size: 14px;
-            font-weight: 400;
-        }
-
-        .footer .list-unstyled li {
-            margin-bottom: 6px;
-        }
-
-        .qr-box {
-            background: white;
-            padding: 10px;
-            text-align: center;
-            font-weight: 500;
-            border: 2px solid #003366;
-            border-radius: 5px;
-        }
-
-        /* Mạng xã hội */
-        .social-icons {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .social-icons img {
-            width: 30px;
-            height: 30px;
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .social-icons img:hover {
-            transform: scale(1.1);
-        }
-
-        .footer-divider {
-            margin: 20px 0;
-            border-top: 1px solid #0056b3;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .footer .row {
-                text-align: center;
+            /* Footer Styles */
+            .footer {
+                background-color: #b3e5fc;
+                color: #003366;
+                font-family: 'Poppins', sans-serif;
+                padding: 40px 10%;
             }
 
             .footer-col {
-                align-items: center;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
             }
 
+            .footer-logo img {
+                max-width: 180px;
+                /* Giới hạn kích thước logo */
+                display: block;
+                margin-bottom: 10px;
+                /* Tạo khoảng cách với nội dung */
+            }
 
-        }
+            .footer-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #0056b3;
+                margin-bottom: 12px;
+            }
+
+            .footer a {
+                color: #003366;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 400;
+            }
+
+            .footer a:hover {
+                color: #0056b3;
+                text-decoration: underline;
+            }
+
+            .footer p {
+                font-size: 14px;
+                font-weight: 400;
+            }
+
+            .footer .list-unstyled li {
+                margin-bottom: 6px;
+            }
+
+            .qr-box {
+                background: white;
+                padding: 10px;
+                text-align: center;
+                font-weight: 500;
+                border: 2px solid #003366;
+                border-radius: 5px;
+            }
+
+            /* Mạng xã hội */
+            .social-icons {
+                display: flex;
+                gap: 10px;
+                margin-top: 12px;
+            }
+
+            .social-icons img {
+                width: 30px;
+                height: 30px;
+                transition: transform 0.2s ease-in-out;
+            }
+
+            .social-icons img:hover {
+                transform: scale(1.1);
+            }
+
+            .footer-divider {
+                margin: 20px 0;
+                border-top: 1px solid #0056b3;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .footer .row {
+                    text-align: center;
+                }
+
+                .footer-col {
+                    align-items: center;
+                }
+
+
+            }
         </style>
 
 

@@ -17,8 +17,11 @@ class Doctor extends Model
         'phone',
         'bio',
         'image',
+        'working_hours'
     ];
-
+    protected $casts = [
+        'working_hours' => 'array', // Chuyển đổi dữ liệu thành mảng
+    ];
     // Nếu cần hash password, bạn có thể thêm mutator
     public function setPasswordAttribute($value)
     {

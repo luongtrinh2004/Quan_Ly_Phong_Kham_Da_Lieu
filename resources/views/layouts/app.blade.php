@@ -23,13 +23,19 @@
 
                 </a>
 
-                <!-- Search -->
-                <div class="d-flex align-items-center" style="max-width: 400px; width: 100%;">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm..." style="border-radius: 25px;">
-                    <button class="btn btn-primary ms-2" style="border-radius: 25px;">
+                <!-- Ô tìm kiếm -->
+                <div class="position-relative" style="max-width: 400px; width: 100%;">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm..."
+                        style="border-radius: 25px;">
+                    <button class="btn btn-primary position-absolute top-0 end-0 m-1" style="border-radius: 25px;">
                         <i class="bi bi-search"></i>
                     </button>
+                    <!-- Kết quả tìm kiếm -->
+                    <div id="searchResults" class="position-absolute w-100 bg-white shadow rounded mt-2 d-none"
+                        style="max-height: 300px; overflow-y: auto; z-index: 1000;">
+                    </div>
                 </div>
+
 
                 <!-- Actions -->
                 <a href="/appointments/create" class="btn btn-primary btn-sm rounded-pill px-3"
@@ -62,20 +68,19 @@
             </button>
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/') }}"
-                            style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; margin: 0 10px;">Home</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('/') }}" style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; 
+                            margin: 0 10px;">Trang Chủ</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/about') }}"
-                            style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; margin: 0 10px;">About
-                            Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/services') }}"
-                            style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; margin: 0 10px;">Services</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('/about') }}" style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500;
+                             margin: 0 10px;">Thông Tin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('/services') }}" style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; 
+                            margin: 0 10px;">Dịch Vụ</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/contact') }}"
-                            style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; margin: 0 10px;">Contact</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('/contact') }}" style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500;
+                            margin: 0 10px;">Liên Lạc</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/doctors') }}"
-                            style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; margin: 0 10px;">Doctors</a>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('/doctors') }}" style="color: #0056b3; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500;
+                             margin: 0 10px;">Bác Sĩ</a>
                     </li>
                 </ul>
             </div>
@@ -166,9 +171,110 @@
         </div>
     </footer>
 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let searchInput = document.getElementById("searchInput");
+            let searchResults = document.getElementById("searchResults");
+
+            searchInput.addEventListener("keyup", function () {
+                let query = searchInput.value.trim();
+                if (query.length < 1) {
+                    searchResults.classList.add("d-none");
+                    return;
+                }
+
+                fetch(`/search?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchResults.innerHTML = "";
+
+                        if (!data.doctors.length && !data.services.length) {
+                            searchResults.innerHTML = "<div class='p-2'>Không tìm thấy kết quả</div>";
+                            searchResults.classList.remove("d-none");
+                            return;
+                        }
+
+                        let html = "";
+
+                        // Hiển thị danh sách bác sĩ
+                        if (data.doctors.length > 0) {
+                            html += "<div class='p-2 fw-bold'>Bác sĩ</div>";
+                            data.doctors.forEach(doctor => {
+                                html += `
+                            <div class="d-flex align-items-center p-2 border-bottom">
+                                <img src="${doctor.image}" class="rounded-circle me-2" 
+                                     style="width: 40px; height: 40px; object-fit: cover;">
+                                <a href="/doctors/${doctor.id}" class="text-dark text-decoration-none">
+                                    ${doctor.name}
+                                </a>
+                            </div>
+                        `;
+                            });
+                        }
+
+                        // Hiển thị danh sách dịch vụ
+                        if (data.services.length > 0) {
+                            html += "<div class='p-2 fw-bold'>Dịch vụ</div>";
+                            data.services.forEach(service => {
+                                html += `
+                            <div class="d-flex align-items-center p-2 border-bottom">
+                                <img src="${service.image}" class="rounded-circle me-2" 
+                                     style="width: 40px; height: 40px; object-fit: cover;">
+                                <a href="/services/${service.id}" class="text-dark text-decoration-none">
+                                    ${service.name}
+                                </a>
+                            </div>
+                        `;
+                            });
+                        }
+
+                        searchResults.innerHTML = html;
+                        searchResults.classList.remove("d-none");
+                    })
+                    .catch(error => console.error("Lỗi tìm kiếm:", error));
+            });
+
+            // Ẩn kết quả khi click ra ngoài
+            document.addEventListener("click", function (event) {
+                if (!searchResults.contains(event.target) && event.target !== searchInput) {
+                    searchResults.classList.add("d-none");
+                }
+            });
+        });
+    </script>
+
+
+
+
+
+
     <style>
         /* Font chữ từ Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+
+        .nav-link {
+            font-family: Arial, sans-serif !important;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0056b3;
+            margin: 0 10px;
+        }
+
+
+
+        /* Hiệu ứng hover: sáng lên */
+        nav a:hover {
+            background-color: rgba(0, 115, 230, 0.1);
+            /* Nền sáng nhẹ */
+            color: #0073e6;
+            /* Đổi màu chữ */
+            transform: scale(1.05);
+            /* Phóng to nhẹ */
+        }
+
+
 
         /* Footer Styles */
         .footer {
@@ -262,6 +368,38 @@
             }
 
 
+        }
+
+
+        #searchResults {
+            position: absolute;
+            width: 100%;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        #searchResults div {
+            padding: 10px;
+        }
+
+        #searchResults img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        #searchResults a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        #searchResults a:hover {
+            text-decoration: underline;
         }
     </style>
 

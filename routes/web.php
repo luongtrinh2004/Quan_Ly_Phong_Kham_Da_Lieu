@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorMedicalRecordController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\AdminInvoiceController;
+use App\Http\Controllers\SearchController;
+
 
 
 
@@ -30,11 +32,15 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::get('/search-doctors', [DoctorController::class, 'search'])->name('doctors.search');
+Route::get('/doctors/search-list', [DoctorController::class, 'search_doctors_list'])->name('doctors.search_list');
 
-
+Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
+Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
 Route::middleware(['auth'])->group(function () {
-    Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+
+    Route::get('/appointments/search', [AppointmentController::class, 'searchAppointments'])->name('appointments.search');
 });
 
 
@@ -74,6 +80,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Đảm bảo route này chỉ hiển thị danh sách dịch vụ cho người dùng
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+    // Xem lịch làm việc của bác sĩ
+    Route::get('/admin/workingschedule', [AdminController::class, 'showshift'])->name('admin.workingschedule');
+    Route::post('/admin/workingschedule/{doctor}', [AdminController::class, 'updateSchedule'])->name('admin.updateSchedule');
 });
 
 // Routes cho quản lý Hồ Sơ Bệnh Án (Medical Records)
@@ -106,7 +115,7 @@ Route::middleware(['auth', 'role:admindoctor'])->group(function () {
         Route::post('/admindoctor/invoices', [InvoiceController::class, 'store'])->name('admindoctor.invoices.store');
         Route::get('/admindoctor/invoices', [InvoiceController::class, 'index'])->name('admindoctor.invoices.index');
         Route::resource('admindoctor/invoices', InvoiceController::class);
-
+        Route::get('/admindoctor/invoices/{id}/print', [InvoiceController::class, 'print'])->name('admindoctor.invoices.print');
     });
 });
 
@@ -139,7 +148,7 @@ Route::get('/contact', function () {
 
 // Home Route sau khi đăng nhập
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home.index');
-
+Route::get('/get-working-hours', [AdminController::class, 'getWorkingHours']);
 // Routes đặt lịch khám
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/appointments', [AdminController::class, 'showAppointments'])->name('admin.appointments.index');
@@ -153,6 +162,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['auth', 'role:admindoctor'])->group(function () {
         Route::get('/admindoctor/dashboard', [DoctorController::class, 'showDashboard'])->name('admindoctor.dashboard');
     });
+
 
     // Doctor xem lịch khám ngay khi bệnh nhân đặt (không cần Admin duyệt)
     Route::middleware(['role:admindoctor'])->group(function () {
@@ -190,3 +200,6 @@ Route::prefix('admin/invoices')->group(function () {
     Route::put('/admin/invoices/{id}', [AdminInvoiceController::class, 'update'])->name('admin.invoices.update');
     Route::delete('/{id}', [AdminInvoiceController::class, 'destroy'])->name('admin.invoices.destroy');
 });
+
+
+Route::get('/getDoctorScheduleWithFutureDates/{doctor}', [AdminController::class, 'getDoctorScheduleWithFutureDates']);

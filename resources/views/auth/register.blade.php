@@ -21,14 +21,13 @@
         </div>
         <div class="mb-3">
             <label for="password_confirmation" class="form-label">Xác nhận mật khẩu</label>
-            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control"
-                required>
+            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
         </div>
         <div class="mb-3">
             <label for="role" class="form-label">Vai trò</label>
             <select name="role" id="role" class="form-select" required>
                 <option value="admin">Admin</option>
-                <option value="admindoctor">Admin Doctor</option>
+
             </select>
         </div>
         <button type="submit" class="btn btn-primary w-100">Đăng ký</button>

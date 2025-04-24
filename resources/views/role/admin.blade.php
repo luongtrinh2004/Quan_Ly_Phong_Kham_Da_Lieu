@@ -18,7 +18,7 @@
         <div class="py-3" style="background-color: #e0f7fa; border-bottom: 1px solid #ccc;">
             <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <!-- Logo -->
-                <a href="{{ url('/') }}" class="d-flex align-items-center">
+                <a href="{{ url('/admin/dashboard') }}" class="d-flex align-items-center">
                     <img src="/img/logo.webp" alt="Logo" style="height: 50px;">
                 </a>
 
@@ -116,7 +116,14 @@
                     </div>
                 </div>
             </div>
-
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Quản Lý Lịch Làm Việc</h5>
+                        <a href="{{ url('/admin/workingschedule') }}" class="btn btn-primary">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body text-center">

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddServicesMedicinesToInvoicesTable extends Migration
+class AddWorkingHoursToDoctors extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddServicesMedicinesToInvoicesTable extends Migration
      */
     public function up()
     {
-        Schema::table('invoices', function (Blueprint $table) {
-            $table->text('services_medicines')->nullable()->after('total_amount');
+        Schema::table('doctors', function (Blueprint $table) {
+            $table->json('working_hours')->nullable()->after('image');
         });
     }
 
@@ -25,9 +25,8 @@ class AddServicesMedicinesToInvoicesTable extends Migration
      */
     public function down()
     {
-        Schema::table('invoices', function (Blueprint $table) {
-            $table->dropColumn('services_medicines');
+        Schema::table('doctors', function (Blueprint $table) {
+            $table->dropColumn('working_hours');
         });
     }
-
 }

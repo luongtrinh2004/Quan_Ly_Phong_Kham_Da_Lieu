@@ -18,7 +18,7 @@
         <div class="py-3" style="background-color: #e0f7fa; border-bottom: 1px solid #ccc;">
             <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <!-- Logo -->
-                <a href="{{ url('/') }}" class="d-flex align-items-center">
+                <a href="{{ url('/admin/dashboard') }}" class="d-flex align-items-center">
                     <img src="/img/logo.webp" alt="Logo" style="height: 50px;">
                 </a>
 
@@ -66,7 +66,7 @@
             Vụ</button>
 
         @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
         <!-- Bảng hiển thị dịch vụ -->
@@ -82,29 +82,29 @@
                 </thead>
                 <tbody>
                     @foreach($services as $service)
-                    <tr>
-                        <td>{{ $service->id }}</td>
-                        <td class="fw-bold">{{ $service->name }}</td>
-                        <td>
-                            <img src="{{ asset($service->image) }}" width="100"
-                                onerror="this.onerror=null; this.src='{{ asset('img/default.jpg') }}';"
-                                class="rounded shadow">
-                        </td>
-                        <td>
-                            <!-- Nút sửa -->
-                            <button class="btn btn-warning btn-sm edit-btn" data-id="{{ $service->id }}"
-                                data-name="{{ $service->name }}" data-image="{{ $service->image }}"
-                                data-bs-toggle="modal" data-bs-target="#editServiceModal">Sửa</button>
+                        <tr>
+                            <td>{{ $service->id }}</td>
+                            <td class="fw-bold">{{ $service->name }}</td>
+                            <td>
+                                <img src="{{ asset($service->image) }}" width="100"
+                                    onerror="this.onerror=null; this.src='{{ asset('img/default.jpg') }}';"
+                                    class="rounded shadow">
+                            </td>
+                            <td>
+                                <!-- Nút sửa -->
+                                <button class="btn btn-warning btn-sm edit-btn" data-id="{{ $service->id }}"
+                                    data-name="{{ $service->name }}" data-image="{{ $service->image }}"
+                                    data-bs-toggle="modal" data-bs-target="#editServiceModal">Sửa</button>
 
-                            <!-- Nút xóa -->
-                            <form action="{{ route('services.destroy', $service->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Bạn có chắc chắn muốn xóa?')"> Xóa</button>
-                            </form>
-                        </td>
-                    </tr>
+                                <!-- Nút xóa -->
+                                <form action="{{ route('services.destroy', $service->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa?')"> Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -167,52 +167,62 @@
     </div>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Xử lý khi nhấn nút "Sửa"
-        document.querySelectorAll(".edit-btn").forEach(btn => {
-            btn.addEventListener("click", function() {
-                let id = this.getAttribute("data-id");
-                let name = this.getAttribute("data-name");
-                let image = this.getAttribute("data-image");
+        document.addEventListener("DOMContentLoaded", function () {
+            // Xử lý khi nhấn nút "Sửa"
+            document.querySelectorAll(".edit-btn").forEach(btn => {
+                btn.addEventListener("click", function () {
+                    let id = this.getAttribute("data-id");
+                    let name = this.getAttribute("data-name");
+                    let image = this.getAttribute("data-image");
 
-                document.getElementById("editServiceId").value = id;
-                document.getElementById("editServiceName").value = name;
-                document.getElementById("editServiceForm").action = `/services/${id}/update`;
+                    document.getElementById("editServiceId").value = id;
+                    document.getElementById("editServiceName").value = name;
+                    document.getElementById("editServiceForm").action = `/services/${id}/update`;
 
-                let imgPreview = document.getElementById("editServiceImagePreview");
-                imgPreview.src = image ? `/${image}` : "/img/default.jpg";
+                    let imgPreview = document.getElementById("editServiceImagePreview");
+                    imgPreview.src = image ? `/${image}` : "/img/default.jpg";
+                });
             });
         });
-    });
     </script>
 
     <style>
-    /* Căn chỉnh bảng dịch vụ */
-    .table {
-        background: #f8f9fa;
-        border-radius: 12px;
-    }
+        .alert {
+            text-align: center;
+            width: 100%;
+            margin: 20px auto;
+            /* Căn giữa theo chiều ngang */
+            padding: 15px;
+            font-size: 18px;
+        }
 
-    /* Hiệu ứng hover nút */
-    .btn:hover {
-        transform: scale(1.05);
-        transition: 0.2s;
-    }
 
-    /* Chỉnh sửa modal */
-    .modal-header {
-        border-bottom: 2px solid #ddd;
-    }
+        /* Căn chỉnh bảng dịch vụ */
+        .table {
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
 
-    .modal-content {
-        border-radius: 10px;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-    }
+        /* Hiệu ứng hover nút */
+        .btn:hover {
+            transform: scale(1.05);
+            transition: 0.2s;
+        }
 
-    /* Chỉnh sửa hình ảnh */
-    img {
-        border-radius: 8px;
-    }
+        /* Chỉnh sửa modal */
+        .modal-header {
+            border-bottom: 2px solid #ddd;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Chỉnh sửa hình ảnh */
+        img {
+            border-radius: 8px;
+        }
     </style>
 
     <footer class="footer">
@@ -282,102 +292,102 @@
     </footer>
 
     <style>
-    /* Font chữ từ Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+        /* Font chữ từ Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-    /* Footer Styles */
-    .footer {
-        background-color: #b3e5fc;
-        color: #003366;
-        font-family: 'Poppins', sans-serif;
-        padding: 40px 10%;
-    }
-
-    .footer-col {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .footer-logo img {
-        max-width: 180px;
-        /* Giới hạn kích thước logo */
-        display: block;
-        margin-bottom: 10px;
-        /* Tạo khoảng cách với nội dung */
-    }
-
-    .footer-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: #0056b3;
-        margin-bottom: 12px;
-    }
-
-    .footer a {
-        color: #003366;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 400;
-    }
-
-    .footer a:hover {
-        color: #0056b3;
-        text-decoration: underline;
-    }
-
-    .footer p {
-        font-size: 14px;
-        font-weight: 400;
-    }
-
-    .footer .list-unstyled li {
-        margin-bottom: 6px;
-    }
-
-    .qr-box {
-        background: white;
-        padding: 10px;
-        text-align: center;
-        font-weight: 500;
-        border: 2px solid #003366;
-        border-radius: 5px;
-    }
-
-    /* Mạng xã hội */
-    .social-icons {
-        display: flex;
-        gap: 10px;
-        margin-top: 12px;
-    }
-
-    .social-icons img {
-        width: 30px;
-        height: 30px;
-        transition: transform 0.2s ease-in-out;
-    }
-
-    .social-icons img:hover {
-        transform: scale(1.1);
-    }
-
-    .footer-divider {
-        margin: 20px 0;
-        border-top: 1px solid #0056b3;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .footer .row {
-            text-align: center;
+        /* Footer Styles */
+        .footer {
+            background-color: #b3e5fc;
+            color: #003366;
+            font-family: 'Poppins', sans-serif;
+            padding: 40px 10%;
         }
 
         .footer-col {
-            align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
+        .footer-logo img {
+            max-width: 180px;
+            /* Giới hạn kích thước logo */
+            display: block;
+            margin-bottom: 10px;
+            /* Tạo khoảng cách với nội dung */
+        }
 
-    }
+        .footer-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0056b3;
+            margin-bottom: 12px;
+        }
+
+        .footer a {
+            color: #003366;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .footer a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .footer p {
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .footer .list-unstyled li {
+            margin-bottom: 6px;
+        }
+
+        .qr-box {
+            background: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 500;
+            border: 2px solid #003366;
+            border-radius: 5px;
+        }
+
+        /* Mạng xã hội */
+        .social-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .social-icons img {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .social-icons img:hover {
+            transform: scale(1.1);
+        }
+
+        .footer-divider {
+            margin: 20px 0;
+            border-top: 1px solid #0056b3;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .footer .row {
+                text-align: center;
+            }
+
+            .footer-col {
+                align-items: center;
+            }
+
+
+        }
     </style>
 
 

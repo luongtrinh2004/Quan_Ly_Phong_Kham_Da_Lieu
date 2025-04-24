@@ -37,6 +37,9 @@ class DoctorController extends Controller
             'email' => 'required|string|email|unique:doctors',
             'password' => 'required|string|min:8',
             'specialty' => 'required|string',
+            'working_hours' => 'required|array',
+            'working_hours.*.day' => 'required|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'working_hours.*.shift' => 'required|in:morning,afternoon'
         ]);
 
         Doctor::create([
@@ -44,6 +47,7 @@ class DoctorController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'specialty' => $request->specialty,
+            'working_hours' => $request->working_hours,
         ]);
 
         return redirect()->back()->with('success', 'Bác sĩ đã được thêm thành công!');
@@ -60,12 +64,16 @@ class DoctorController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:doctors,email,' . $id,
             'specialty' => 'required|string',
+            'working_hours' => 'nullable|array', // Cho phép lịch làm việc rỗng
+            'working_hours.*.day' => 'required_with:working_hours|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'working_hours.*.shift' => 'required_with:working_hours|in:morning,afternoon',
         ]);
 
         $doctor->update([
             'name' => $request->name,
             'email' => $request->email,
             'specialty' => $request->specialty,
+            'working_hours' => $request->has('working_hours') ? $request->working_hours : $doctor->working_hours,
         ]);
 
         return redirect()->back()->with('success', 'Bác sĩ đã được cập nhật thành công!');
@@ -96,15 +104,15 @@ class DoctorController extends Controller
     {
         // Lấy thông tin bác sĩ từ bảng doctors (có thể dùng ID từ Auth hoặc bảng users)
         $doctor = Doctor::where('email', Auth::user()->email)->first();
-    
+
         // Kiểm tra nếu bác sĩ không tồn tại
         if (!$doctor) {
             return redirect()->route('home')->with('error', 'Không tìm thấy thông tin bác sĩ.');
         }
-    
+
         return view('role.admindoctor', compact('doctor'));
     }
-    
+
 
     /**
      * Hiển thị lịch trình khám của bác sĩ.
@@ -124,15 +132,24 @@ class DoctorController extends Controller
         }
     }
 
+    public function search_doctors_list(Request $request)
+    {
+        $query = $request->input('query');
+
+        $doctors = Doctor::where('name', 'like', '%' . $query . '%')
+            ->orWhere('specialty', 'like', '%' . $query . '%')
+            ->get();
+
+        return view('doctors', compact('doctors'));
+    }
+
+
     public function showPatients()
-{
-    $patients = Appointment::where('doctor_id', Auth::id()) // Chỉ lấy bệnh nhân của doctor hiện tại
-        ->with('patient') // Load thông tin bệnh nhân
-        ->get();
+    {
+        $patients = Appointment::where('doctor_id', Auth::id()) // Chỉ lấy bệnh nhân của doctor hiện tại
+            ->with('patient') // Load thông tin bệnh nhân
+            ->get();
 
-    return view('role.patients', compact('patients'));
-}
-
-    
-
+        return view('role.patients', compact('patients'));
+    }
 }

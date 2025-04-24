@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Doctor;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Appointment;
 use App\Models\User;
+use Carbon\Carbon;
+use App\Models\DoctorSchedule;
 
 class AdminController extends Controller
 {
@@ -40,6 +43,9 @@ class AdminController extends Controller
             'phone' => 'required|string',
             'bio' => 'nullable|string',
             'image' => 'nullable|file|max:5120|mimes:jpeg,png,jpg,gif', // Giống như dịch vụ
+            'working_hours' => 'nullable|array', // Cho phép lịch làm việc rỗng
+            'working_hours.*.day' => 'required_with:working_hours|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'working_hours.*.shift' => 'required_with:working_hours|in:morning,afternoon',
         ]);
 
         if ($request->hasFile('image')) {
@@ -55,11 +61,12 @@ class AdminController extends Controller
         $doctor = Doctor::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => Hash::make($request->password),
             'specialty' => $request->specialty,
             'phone' => $request->phone,
             'bio' => $request->bio,
             'image' => $filePath,
+            'working_hours' => $request->working_hours,
         ]);
 
         // Thêm tài khoản vào bảng users
@@ -90,6 +97,9 @@ class AdminController extends Controller
             'phone' => 'required|string',
             'bio' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'working_hours' => 'nullable|array', // Cho phép lịch làm việc rỗng
+            'working_hours.*.day' => 'required_with:working_hours|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'working_hours.*.shift' => 'required_with:working_hours|in:morning,afternoon',
         ]);
 
         // Xử lý ảnh (nếu có)
@@ -103,8 +113,30 @@ class AdminController extends Controller
             $doctor->image = 'img/' . $imageName;
         }
 
-        // Cập nhật thông tin bác sĩ
-        $doctor->update($request->all());
+
+        $updateData = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'specialty' => $request->specialty,
+            'phone' => $request->phone,
+            'bio' => $request->bio,
+            'working_hours' => $request->filled('working_hours') ? $request->working_hours : null,
+        ];
+
+        // Nếu có nhập mật khẩu mới, cập nhật mật khẩu
+        if ($request->filled('password')) {
+            $updateData['password'] = Hash::make($request->password);
+        }
+
+        // Cập nhật bác sĩ
+        $doctor->update($updateData);
+
+        // Nếu có bảng `users` liên kết với bác sĩ, cập nhật cả tài khoản user
+        User::where('email', $doctor->email)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->filled('password') ? Hash::make($request->password) : $doctor->password,
+        ]);
 
         // Chuyển hướng về danh sách bác sĩ kèm thông báo
         return redirect()->route('admin.doctors.index')->with('success', 'Thông tin bác sĩ đã được cập nhật.');
@@ -223,6 +255,7 @@ class AdminController extends Controller
             'age' => 'required|integer',
             'cccd' => 'required|string|unique:appointments,cccd',
             'appointment_date' => 'required|date',
+            'shift' => 'required|in:morning,afternoon',
             'description' => 'nullable|string',
             'doctor_id' => 'required|exists:doctors,id',
             'specialty' => 'required|string',
@@ -245,6 +278,7 @@ class AdminController extends Controller
             'age' => $request->age,
             'cccd' => $request->cccd,
             'appointment_date' => $request->appointment_date,
+            'shift' => $request->shift,
             'description' => $request->description,
             'doctor_id' => $doctor->id,
             'specialty' => $request->specialty,
@@ -266,6 +300,7 @@ class AdminController extends Controller
             'specialty' => 'required|string',
             'doctor_id' => 'required|exists:doctors,id',
             'appointment_date' => 'required|date',
+            'shift' => 'required|in:morning,afternoon',
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => 'required|string',
@@ -279,4 +314,96 @@ class AdminController extends Controller
         return redirect()->route('admin.appointments.index')->with('success', 'Lịch hẹn đã được cập nhật.');
     }
 
+    public function getDoctorScheduleWithFutureDates($doctorId)
+    {
+        // Lấy lịch làm việc của bác sĩ
+        $schedules = DoctorSchedule::where('doctor_id', $doctorId)->get();
+
+        if ($schedules->isEmpty()) {
+            return response()->json(['error' => 'Không có lịch làm việc'], 404);
+        }
+
+        $formattedSchedules = [];
+
+        foreach ($schedules as $schedule) {
+            $currentDate = now(); // Ngày hiện tại
+
+            for ($i = 0; $i < 6; $i++) { // Lấy 6 tuần tiếp theo của lịch làm việc
+                $nextDate = $currentDate->copy()->next($schedule->day_of_week)->addWeeks($i);
+                $shiftText = $schedule->shift === 'morning' ? '08h-12h' : '14h-18h';
+
+                $formattedSchedules[] = [
+                    'id' => $schedule->id,
+                    'display' => "{$schedule->day_of_week} - {$shiftText} ({$nextDate->format('d/m/Y')})",
+                    'date' => $nextDate->format('Y-m-d'),
+                    'shift' => $schedule->shift
+                ];
+            }
+        }
+
+        return response()->json($formattedSchedules);
+    }
+    public function getWorkingHours(Request $request)
+    {
+        $doctor = Doctor::findOrFail($request->doctor_id);
+        $selectedDate = $request->query('date');
+        $dayOfWeek = date('l', strtotime($selectedDate)); // Lấy thứ trong tuần (Monday, Tuesday, ...)
+
+
+
+        $workingHours = $doctor->working_hours;
+
+        if (!is_array($workingHours)) {
+            return response()->json(['error' => 'Lịch làm việc không hợp lệ'], 400);
+        }
+
+        $availableShifts = ['morning' => false, 'afternoon' => false];
+
+        foreach ($workingHours as $entry) {
+            if (isset($entry['day'], $entry['shift']) && $entry['day'] === $dayOfWeek) {
+                if ($entry['shift'] === 'morning' || $entry['shift'] === 'both') {
+                    $availableShifts['morning'] = true;
+                }
+                if ($entry['shift'] === 'afternoon' || $entry['shift'] === 'both') {
+                    $availableShifts['afternoon'] = true;
+                }
+            }
+        }
+
+        return response()->json($availableShifts);
+    }
+    public function showshift(Request $request)
+    {
+        // Lấy tất cả bác sĩ
+        $doctors = Doctor::all(['id', 'name', 'specialty', 'phone', 'image', 'working_hours']);
+
+        // Nhóm theo chuyên môn để hiển thị
+        $specialtyGroups = $doctors->groupBy('specialty');
+
+        // Xác định bác sĩ được chọn để sửa lịch
+        $selectedDoctor = null;
+        if ($request->has('doctor_id')) {
+            $selectedDoctor = Doctor::find($request->doctor_id);
+        }
+
+        return view('role.workingschedule', compact('doctors', 'selectedDoctor', 'specialtyGroups'));
+    }
+
+
+    public function updateSchedule(Request $request, $id)
+    {
+        $doctor = Doctor::findOrFail($id);
+
+        $request->validate([
+            'working_hours' => 'required|array',
+            'working_hours.*.day' => 'required|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'working_hours.*.shift' => 'required|in:morning,afternoon',
+        ]);
+
+        $doctor->update([
+            'working_hours' => $request->filled('working_hours') ? $request->working_hours : null,
+        ]);
+
+        return redirect()->route('admin.workingschedule', ['doctor_id' => $id])->with('success', 'Lịch làm việc đã được cập nhật.');
+    }
 }

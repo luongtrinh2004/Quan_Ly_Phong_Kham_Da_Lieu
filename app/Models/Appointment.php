@@ -19,6 +19,7 @@ class Appointment extends Model
         'age',
         'cccd',
         'appointment_date',
+        'shift',
         'description',
         'status',
     ];

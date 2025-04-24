@@ -358,3 +358,8 @@ a {
     color: #555;
     line-height: 1.6;
 }
+
+.grid-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+}
