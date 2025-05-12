@@ -52,7 +52,7 @@ class AppointmentController extends Controller
 
     public function searchAppointments(Request $request)
     {
-        $doctorId = auth()->user()->id; // Lấy ID của bác sĩ đăng nhập
+        $doctorId = auth()->user()->id; // Lấy ID của bác sĩ đăng nhậpppppp
         $query = $request->input('query');
 
         // Tìm kiếm lịch hẹn của bác sĩ hiện tại theo tên bệnh nhân, ngày khám hoặc trạng thái
